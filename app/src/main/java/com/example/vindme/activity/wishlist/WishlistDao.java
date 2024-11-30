@@ -16,6 +16,6 @@ public interface WishlistDao {
   @Query("SELECT * FROM Wishlist")
   List<Wishlist> getAllWishlist();
 
-  @Query("DELETE FROM Wishlist WHERE idWishlist = :idWishlist")
-  void deleteWishlist(String idWishlist);
+  @Query("DELETE FROM Wishlist WHERE wishlistId = :wishlistId")
+  void deleteWishlist(String wishlistId);
 }

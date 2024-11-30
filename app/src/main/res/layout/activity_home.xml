@@ -50,16 +50,16 @@
 <!--    app:layout_constraintTop_toBottomOf="@+id/textView2" />-->
 
   <TextView
-    android:id="@+id/tvActivity"
-    android:layout_width="100dp"
-    android:layout_height="30dp"
-    android:layout_marginTop="50dp"
-    android:textColor="#A04747"
-    android:textSize="20dp"
-    android:gravity="center"
-    app:layout_constraintEnd_toEndOf="@+id/fragment_container"
-    app:layout_constraintStart_toStartOf="@+id/fragment_container"
-    app:layout_constraintTop_toTopOf="parent" />
+      android:id="@+id/tvActivity"
+      android:layout_width="100dp"
+      android:layout_height="30dp"
+      android:layout_marginTop="50dp"
+      android:gravity="center"
+      android:textColor="#A04747"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toEndOf="@+id/fragment_container"
+      app:layout_constraintStart_toStartOf="@+id/fragment_container"
+      app:layout_constraintTop_toTopOf="parent" />
 
   <FrameLayout
     android:id="@+id/fragment_container"
