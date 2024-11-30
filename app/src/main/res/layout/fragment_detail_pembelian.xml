@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  tools:context=".activity.home.DetailPembelianFragment">
+
+  <!-- TODO: Update blank fragment layout -->
+  <ImageView
+    android:id="@+id/ivCover"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:layout_marginTop="50dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ariana_grande" />
+
+  <TextView
+    android:id="@+id/tvArtist"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="30dp"
+    android:layout_marginTop="50dp"
+    android:text="TextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/ivCover"
+    android:textColor="#A04747"
+    android:textStyle="bold"
+    android:textSize="20dp"/>
+
+  <TextView
+    android:id="@+id/tvTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="TextView"
+    app:layout_constraintStart_toStartOf="@+id/tvArtist"
+    app:layout_constraintTop_toBottomOf="@+id/tvArtist"
+    android:textColor="@color/black"
+    android:textSize="16dp"/>
+
+
+  <TextView
+    android:id="@+id/tvPrice"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="Rp. 699.000"
+    android:textSize="14dp"
+    android:textColor="@color/black"
+    app:layout_constraintStart_toStartOf="@+id/tvTitle"
+    app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+  <TextView
+    android:id="@+id/tvDetail"
+    android:layout_width="340dp"
+    android:layout_height="200dp"
+    android:layout_marginTop="20dp"
+    android:textColor="@color/black"
+    android:textSize="14dp"
+    app:layout_constraintStart_toStartOf="@+id/tvPrice"
+    app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+
+  <Button
+    android:id="@+id/btWishlist"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:background="@drawable/wishlist_icon"
+    android:layout_marginStart="30dp"
+    android:layout_marginBottom="30dp"
+    android:backgroundTint="#A04747"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <Button
+    android:id="@+id/btCart"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:background="@drawable/cart_icon"
+    android:layout_marginStart="30dp"
+    android:backgroundTint="#A04747"
+    app:layout_constraintBottom_toBottomOf="@+id/btWishlist"
+    app:layout_constraintStart_toEndOf="@+id/btWishlist" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

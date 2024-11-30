@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <ImageView
+    android:id="@+id/ivCover"
+    android:layout_width="170dp"
+    android:layout_height="170dp"
+    android:layout_marginTop="32dp"
+    android:src="@drawable/ariana_grande"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/tvArtist"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="artis"
+    android:textSize="20dp"
+    android:textColor="#A04747"
+    android:textStyle="bold"
+    android:layout_marginTop="20dp"
+    app:layout_constraintStart_toStartOf="@+id/ivCover"
+    app:layout_constraintTop_toBottomOf="@+id/ivCover" />
+
+  <TextView
+    android:id="@+id/tvTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="deskripsi album"
+    android:textSize="16dp"
+    android:textColor="@color/black"
+    android:layout_marginTop="10dp"
+    app:layout_constraintStart_toStartOf="@+id/tvArtist"
+    app:layout_constraintTop_toBottomOf="@+id/tvArtist" />
+
+  <TextView
+    android:id="@+id/tvPrice"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="harga"
+    android:textSize="14dp"
+    android:textColor="@color/black"
+    android:layout_marginTop="10dp"
+    app:layout_constraintStart_toStartOf="@+id/tvTitle"
+    app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
