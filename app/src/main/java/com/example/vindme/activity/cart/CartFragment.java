@@ -5,17 +5,16 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.vindme.R;
-import com.example.vindme.activity.home.Album;
 import com.example.vindme.activity.wishlist.Wishlist;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,8 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -44,9 +41,11 @@ public class CartFragment extends Fragment {
   private TextView tvTotalPrice;
   private List<Cart> cartList;
   private FirebaseAuth firebaseAuth;
+  private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app");
   private DatabaseReference databaseReference;
   private int totalPrice;
-  private String price;
+  private String price, formattedPrice;
+  private Button btPay;
 
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,12 +92,17 @@ public class CartFragment extends Fragment {
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
+    btPay = view.findViewById(R.id.btPay);
+    if (btPay != null) {
+      Log.d("CartFragment", "btPay button found!");
+    } else {
+      Log.e("CartFragment", "btPay button not found!");
+    }
     tvTotalPrice = view.findViewById(R.id.tvTotalPrice);
     recyclerView = view.findViewById(R.id.rvCart);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     firebaseAuth = FirebaseAuth.getInstance();
-    databaseReference = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("carts");
 
     cartList = new ArrayList<>();
     cartAdapter = new CartAdapter(getContext(), cartList);
@@ -111,18 +115,19 @@ public class CartFragment extends Fragment {
     }
     Bundle args = getArguments();
     if (args != null) {
+      databaseReference = firebaseDatabase.getReference("wishlist");
 
       Wishlist selectedWishlist = (Wishlist) args.getSerializable("selectedWishlist");
       if (selectedWishlist != null) {
-        // Masukkan item ke daftar cartList lokal
         cartList = new ArrayList<>();
         Cart cartItem = new Cart();
+        cartItem.setCartId(selectedWishlist.getWishlistId());
         cartItem.setTitle(selectedWishlist.getTitle());
+        cartItem.setArtist(selectedWishlist.getArtist());
         cartItem.setPrice(selectedWishlist.getPrice());
         cartItem.setCover(selectedWishlist.getCover());
         cartList.add(cartItem);
 
-        // Set data ke adapter
         cartAdapter = new CartAdapter(getContext(), cartList);
         recyclerView.setAdapter(cartAdapter);
 
@@ -130,11 +135,32 @@ public class CartFragment extends Fragment {
         price = cartItem.getPrice().replace("Rp", "").trim().replace(".", "");
         totalPrice += Integer.parseInt(price);
 
-        // Hitung total harga
         calculateTotalPrice();
+
+        btPay.setOnClickListener(v -> {
+          Log.d("CartFragment", "Pay button clicked!");
+          String wishlistId = cartItem.getCartId();
+          if (wishlistId != null) {
+            databaseReference.child(userId).child(wishlistId).removeValue().addOnCompleteListener(task -> {
+              if (task.isSuccessful()) {
+                cartList.remove(cartItem);
+                cartAdapter.notifyItemRemoved(cartList.indexOf(cartItem));
+                Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
+                totalPrice = 0;
+                calculateTotalPrice();
+              } else {
+                Log.e("WishlistFragment", "Gagal menghapus item: " + wishlistId, task.getException());
+                if (isAdded()) {
+                  Toast.makeText(getContext(), "Gagal menghapus album", Toast.LENGTH_SHORT).show();
+                }
+              }
+            });
+          }
+        });
       }
 
     } else {
+      databaseReference = firebaseDatabase.getReference("carts");
 
       databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
         @Override
@@ -180,6 +206,35 @@ public class CartFragment extends Fragment {
         }
       });
 
+      btPay.setOnClickListener(v -> {
+        Log.d("CartFragment", "Pay button clicked!");
+        if (userId != null) {
+
+          DatabaseReference userCartRef = databaseReference.child(userId);
+
+          Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
+
+          userCartRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+              cartList.clear();
+              cartAdapter.notifyDataSetChanged();
+
+              totalPrice = 0;
+              calculateTotalPrice();
+            } else {
+              Log.e("CartFragment", "Gagal menghapus semua item dari keranjang", task.getException());
+              if (isAdded()) {
+                Toast.makeText(getContext(), "Gagal menghapus semua item dari keranjang", Toast.LENGTH_SHORT).show();
+              }
+            }
+          });
+        } else {
+          if (isAdded()) {
+            Toast.makeText(getContext(), "Pengguna tidak terautentikasi", Toast.LENGTH_SHORT).show();
+          }
+        }
+      });
     }
     return view;
   }
@@ -188,8 +243,7 @@ public class CartFragment extends Fragment {
     // Format harga
     DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(new Locale("id", "ID"));
     decimalFormat.applyPattern("#,###");
-    String formattedPrice = decimalFormat.format(totalPrice);
-
+    formattedPrice = decimalFormat.format(totalPrice);
     tvTotalPrice.setText("Rp " + formattedPrice);
   }
 }

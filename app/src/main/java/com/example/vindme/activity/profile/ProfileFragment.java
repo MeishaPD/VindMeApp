@@ -1,5 +1,6 @@
 package com.example.vindme.activity.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.vindme.R;
+import com.example.vindme.activity.cart.CartActivity;
+import com.example.vindme.activity.wishlist.WishlistActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +30,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth auth;
     private DatabaseReference database;
     private Button btn_edit;
+    private CardView card_keranjang, card_wishlist, card_pengaturan;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +40,9 @@ public class ProfileFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("profile");
 
+        card_keranjang = view.findViewById(R.id.card_keranjang);
+        card_wishlist = view.findViewById(R.id.card_wishlist);
+        card_pengaturan = view.findViewById(R.id.card_pengaturan);
         tvUsername = view.findViewById(R.id.tv_username);
         tvEmail = view.findViewById(R.id.tv_email);
 
@@ -45,6 +53,14 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Anda belum log in", Toast.LENGTH_SHORT).show();
 //            createNewUser();
         }
+
+        card_keranjang.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), CartActivity.class));
+        });
+
+        card_wishlist.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), WishlistActivity.class));
+        });
 
         btn_edit = view.findViewById(R.id.btn_edit);
         btn_edit.setOnClickListener(v -> {

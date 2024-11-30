@@ -20,13 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,16 +121,16 @@ public class WishlistFragment extends Fragment {
     });
 
     wishlistAdapter.setOnDeleteClickListener((wishlist, position) -> {
-      String cartId = wishlist.getWishlistId();
-      if (cartId != null) {
-        reference.child(userId).child(cartId).removeValue().addOnCompleteListener(task -> {
+      String wishlistId = wishlist.getWishlistId();
+      if (wishlistId != null) {
+        reference.child(userId).child(wishlistId).removeValue().addOnCompleteListener(task -> {
           if (task.isSuccessful()) {
             wishlistAdapter.notifyDataSetChanged(); // Perbarui seluruh RecyclerView
             if (wishlistList.isEmpty() && isAdded()) {
               Toast.makeText(getContext(), "Wishlist kosong", Toast.LENGTH_SHORT).show();
             }
           } else {
-            Log.e("WishlistFragment", "Gagal menghapus item: " + cartId, task.getException());
+            Log.e("WishlistFragment", "Gagal menghapus item: " + wishlistId, task.getException());
             if (isAdded()) {
               Toast.makeText(getContext(), "Gagal menghapus album", Toast.LENGTH_SHORT).show();
             }
