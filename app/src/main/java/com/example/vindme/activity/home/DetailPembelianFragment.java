@@ -39,7 +39,7 @@ public class DetailPembelianFragment extends Fragment {
   private int albumId;
   private String cover, title, artist, detail, price, pesan;
   private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-  private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app");
+  private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/");
   private DatabaseReference databaseReference;
 
   // TODO: Rename parameter arguments, choose names that match

@@ -36,7 +36,7 @@ public class WishlistFragment extends Fragment {
   private List<Wishlist> wishlistList;
   private AppDatabase appDatabase;
   private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-  private DatabaseReference reference = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("wishlist");
+  private DatabaseReference reference = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("wishlist");
 
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

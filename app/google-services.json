@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "65657809331",
-    "project_id": "papbd-7cfaf",
-    "storage_bucket": "papbd-7cfaf.firebasestorage.app"
+    "project_number": "1096637503905",
+    "firebase_url": "https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "vindme-d1523",
+    "storage_bucket": "vindme-d1523.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:65657809331:android:f24df474fea52204f303c6",
+        "mobilesdk_app_id": "1:1096637503905:android:baf4aef483daec4a10d3e0",
         "android_client_info": {
           "package_name": "com.example.vindme"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC0WCX1loEMq7apfVbWwMezIZ5W5iWroVs"
+          "current_key": "AIzaSyD2T7E3rnkKydubWB-RMbeMKxFQVfYm1hc"
         }
       ],
       "services": {

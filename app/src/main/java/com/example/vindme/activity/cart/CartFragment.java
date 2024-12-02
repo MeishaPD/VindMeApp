@@ -41,7 +41,7 @@ public class CartFragment extends Fragment {
   private TextView tvTotalPrice;
   private List<Cart> cartList;
   private FirebaseAuth firebaseAuth;
-  private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app");
+  private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/");
   private DatabaseReference databaseReference;
   private int totalPrice;
   private String price, formattedPrice;

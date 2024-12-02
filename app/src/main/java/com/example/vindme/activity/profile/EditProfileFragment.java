@@ -33,7 +33,7 @@ public class EditProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("profile");
+        database = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("profile");
 
         etUsername = view.findViewById(R.id.editTextText);
         etEmail = view.findViewById(R.id.editTextText2);

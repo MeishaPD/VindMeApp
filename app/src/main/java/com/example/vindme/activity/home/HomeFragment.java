@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
     firebaseAuth = FirebaseAuth.getInstance();
-    databaseReference = FirebaseDatabase.getInstance("https://papbd-7cfaf-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("albums");
+    databaseReference = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("albums");
 
     String email = "user" + System.currentTimeMillis() + "@example.com";
     String password = "password123";
