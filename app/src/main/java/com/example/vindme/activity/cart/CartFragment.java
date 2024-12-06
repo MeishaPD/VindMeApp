@@ -28,6 +28,7 @@ import java.util.List;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +44,7 @@ public class CartFragment extends Fragment {
   private FirebaseAuth firebaseAuth;
   private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://vindme-d1523-default-rtdb.asia-southeast1.firebasedatabase.app/");
   private DatabaseReference databaseReference;
+  private DatabaseReference historiesReference;
   private int totalPrice;
   private String price, formattedPrice;
   private Button btPay;
@@ -93,16 +95,12 @@ public class CartFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
     btPay = view.findViewById(R.id.btPay);
-    if (btPay != null) {
-      Log.d("CartFragment", "btPay button found!");
-    } else {
-      Log.e("CartFragment", "btPay button not found!");
-    }
     tvTotalPrice = view.findViewById(R.id.tvTotalPrice);
     recyclerView = view.findViewById(R.id.rvCart);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     firebaseAuth = FirebaseAuth.getInstance();
+    historiesReference = firebaseDatabase.getReference("histories");
 
     cartList = new ArrayList<>();
     cartAdapter = new CartAdapter(getContext(), cartList);
@@ -141,20 +139,29 @@ public class CartFragment extends Fragment {
           Log.d("CartFragment", "Pay button clicked!");
           String wishlistId = cartItem.getCartId();
           if (wishlistId != null) {
-            databaseReference.child(userId).child(wishlistId).removeValue().addOnCompleteListener(task -> {
-              if (task.isSuccessful()) {
-                cartList.remove(cartItem);
-                cartAdapter.notifyItemRemoved(cartList.indexOf(cartItem));
-                Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
-                totalPrice = 0;
-                calculateTotalPrice();
-              } else {
-                Log.e("WishlistFragment", "Gagal menghapus item: " + wishlistId, task.getException());
-                if (isAdded()) {
-                  Toast.makeText(getContext(), "Gagal menghapus album", Toast.LENGTH_SHORT).show();
-                }
-              }
-            });
+            String historyId = UUID.randomUUID().toString();
+
+            historiesReference.child(userId).child(historyId).setValue(cartItem)
+                    .addOnSuccessListener(aVoid -> {
+                      databaseReference.child(userId).child(wishlistId).removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                          cartList.remove(cartItem);
+                          cartAdapter.notifyItemRemoved(cartList.indexOf(cartItem));
+                          Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
+                          totalPrice = 0;
+                          calculateTotalPrice();
+                        } else {
+                          Log.e("CartFragment", "Gagal menghapus item: " + wishlistId, task.getException());
+                          if (isAdded()) {
+                            Toast.makeText(getContext(), "Gagal menghapus album", Toast.LENGTH_SHORT).show();
+                          }
+                        }
+                      });
+                    })
+                    .addOnFailureListener(e -> {
+                      Log.e("CartFragment", "Gagal menyimpan riwayat", e);
+                      Toast.makeText(getContext(), "Gagal menyimpan riwayat pembelian", Toast.LENGTH_SHORT).show();
+                    });
           }
         });
       }
@@ -192,7 +199,7 @@ public class CartFragment extends Fragment {
         if (cartId != null) {
           databaseReference.child(userId).child(cartId).removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-              cartAdapter.notifyDataSetChanged(); // Perbarui seluruh RecyclerView
+              cartAdapter.notifyDataSetChanged();
               if (cartList.isEmpty() && isAdded()) {
                 Toast.makeText(getContext(), "Keranjang kosong", Toast.LENGTH_SHORT).show();
               }
@@ -209,26 +216,33 @@ public class CartFragment extends Fragment {
       btPay.setOnClickListener(v -> {
         Log.d("CartFragment", "Pay button clicked!");
         if (userId != null) {
-
           DatabaseReference userCartRef = databaseReference.child(userId);
 
-          Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
+          String historyId = UUID.randomUUID().toString();
 
-          userCartRef.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+          historiesReference.child(userId).child(historyId).setValue(cartList)
+                  .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Pembayaran sebesar Rp " + formattedPrice + " berhasil", Toast.LENGTH_SHORT).show();
 
-              cartList.clear();
-              cartAdapter.notifyDataSetChanged();
+                    userCartRef.removeValue().addOnCompleteListener(task -> {
+                      if (task.isSuccessful()) {
+                        cartList.clear();
+                        cartAdapter.notifyDataSetChanged();
 
-              totalPrice = 0;
-              calculateTotalPrice();
-            } else {
-              Log.e("CartFragment", "Gagal menghapus semua item dari keranjang", task.getException());
-              if (isAdded()) {
-                Toast.makeText(getContext(), "Gagal menghapus semua item dari keranjang", Toast.LENGTH_SHORT).show();
-              }
-            }
-          });
+                        totalPrice = 0;
+                        calculateTotalPrice();
+                      } else {
+                        Log.e("CartFragment", "Gagal menghapus semua item dari keranjang", task.getException());
+                        if (isAdded()) {
+                          Toast.makeText(getContext(), "Gagal menghapus semua item dari keranjang", Toast.LENGTH_SHORT).show();
+                        }
+                      }
+                    });
+                  })
+                  .addOnFailureListener(e -> {
+                    Log.e("CartFragment", "Gagal menyimpan riwayat", e);
+                    Toast.makeText(getContext(), "Gagal menyimpan riwayat pembelian", Toast.LENGTH_SHORT).show();
+                  });
         } else {
           if (isAdded()) {
             Toast.makeText(getContext(), "Pengguna tidak terautentikasi", Toast.LENGTH_SHORT).show();
